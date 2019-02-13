@@ -1,0 +1,19 @@
+.btn_small {
+    height: 24px;
+    width: 60px;
+    line-height: 24px;
+    margin: 5px;
+    padding: 0 0.5em;
+}
+
+.task-header {
+    margin-top: 9px;
+    margin-left: 5px;
+}
+
+/* The task buttons look weird on certain smaller screen sizes. This fixes */
+@media (max-width: 479px) {
+    .task-buttons {
+        max-width: 89px; 
+    }
+}
