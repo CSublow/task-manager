@@ -5,13 +5,14 @@
 <h3>Edit Task</h3>
 
 <div class="row">
-    <form action="{{ url_for('update_task') }}" method="POST" class="col s12">
+    <!-- The task _id field is passed along into the update_task function -->
+    <form action="{{ url_for('update_task', task_id=task._id) }}" method="POST" class="col s12">
         <div class="row">
             <div class="input-field col s12">
                 <i class="material-icons prefix">poll</i>
                 <select id="category" name="category_name">
                     <option value="" disabled selected>Choose category</option>
-                    {% for cat in categories %}
+                    {% for cat in cats %}
                     <!-- On the Edit Task page we want to display the current category for the task as the default value -->
                     {% if cat.category_name == task.category_name %} <!-- If there is a match between the task's category and the category currently bering iterated over, that iteratation will have the selected attribute -->
                     <option value="{{ cat.category_name }}" selected>{{ cat.category_name }}</option>
@@ -67,9 +68,21 @@
 <script>
     /* global $ */
     $(document).ready(function() {
+        /* Datepicker */
+        $('.datepicker').pickadate({ 
+            selectMonths: true, //Creates a dropdown to control month
+            selectYears: 15, //Create a dropdown of 15 years to control years
+            today: 'Today',
+            clear: 'Clear',
+            close: 'Ok',
+            closeOnSelect: false //Close or not when a date is picked
+        });
         var due_date = Date.parse('{{ task.due_date }}'); // In order for Javascript to work with the date properly it must be parsed
         // Go to the id 'due_date', begin picking a date using 'picker', and set our selected date as the due_date var we set on the line above. Also specify the format and the trigger event as 'change'
-        $('#due_date').pickadate('picker').set('select', due_date, {format: 'dd/mm/yyyy'}).trigger('change')
+        $('#due_date').pickadate('picker').set('select', due_date, {format: 'dd/mm/yyyy'}).trigger('change');
+        
+        // due_date = Date.parse('{{task.due_date}}');
+        // $('#due_date').pickadate('picker').set('select', due_date, { format: 'dd/mm/yyyy' }).trigger('change');
     });
 </script>
 
