@@ -42,16 +42,17 @@ def edit_task(task_id):
     # Render edit_task.html and pass across the_task and cats
     return render_template('edittask.html', task=the_task, cats=all_cats)
     
-@app.route('/update_task/<task_id>', methods=['POST'])
-def update_task(task_id): # We pass in the task_id as that is the hook into the 'primary key' (not strictly correct terminology as this is not a relational database)
-    tasks = mongo.db.tasks # Access the tasks collection
+@app.route('/update_task/<task_id>', methods=["POST"])
+# We pass in the task_id as that is the hook into the 'primary key' (not strictly correct terminology as this is not a relational database)
+def update_task(task_id):
+    tasks = mongo.db.tasks
     tasks.update( {'_id': ObjectId(task_id)},
     {
-        'task_name': request.form.get['task_name'],
-        'category_name': request.form.get['category_name'],
-        'task_description': request.form.get['task_description'],
-        'due_date': request.form.get['due_date'],
-        'is_urgent': request.form.get['is_urgent']
+        'task_name':request.form.get('task_name'), # Access the tasks collection
+        'category_name':request.form.get('category_name'),
+        'task_description': request.form.get('task_description'),
+        'due_date': request.form.get('due_date'),
+        'is_urgent':request.form.get('is_urgent')
     })
     return redirect(url_for('get_tasks'))
     
@@ -82,13 +83,24 @@ def edit_category(category_id):
 # The submit button on editcategory.html calls this function
 @app.route('/update_category/<category_id>', methods=['POST'])
 def update_category(category_id):
-    # categories = mongo.db.categories # Access the categories collection
+    # Access the categories collection. Use the update method on the record whose id matches the one passed through
     mongo.db.categories.update( {'_id': ObjectId(category_id)},
     {
         # Drill into the form that is contained within the request object and get the form item whose name is category_name
-        'category_name': request.form.get['category_name'],
+        'category_name': request.form.get('category_name'),
     })
     return redirect(url_for('get_categories'))
+    
+@app.route('/add_category')
+def add_category():
+    return render_template('addcategory.html')
+    
+@app.route('/insert_category', methods=['POST'])
+def insert_category():
+    categories = mongo.db.categories # Grab categories from the database
+    category_doc = {'category_name': request.form.get('category_name')} # The doc to be inserted
+    categories.insert_one(category_doc) # Insert the doc into the database
+    return redirect(url_for('get_categories')) # Call get_categories (allows us to see our new category)
 
 if __name__ == '__main__':
     app.run(host=os.environ.get('IP'),

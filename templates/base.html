@@ -13,8 +13,25 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css" />
 </head>
 <body>
+    <header>
+        <nav>
+            <div class="nav-wrapper">
+                <a href="{{ url_for('get_tasks') }}" class="brand-logo">Task Manager</a>
+                <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    <li><a href="{{ url_for('get_tasks') }}">Tasks</a></li>
+                    <li><a href="{{ url_for('add_task') }}">Add a Task</a></li>
+                    <li><a href="{{ url_for('get_categories') }}">Manage Categories</a></li>
+                </ul>
+            </div>
+            <ul class="side-nav" id="mobile-demo">
+                <li><a href="{{ url_for('get_tasks') }}">Tasks</a></li>
+                <li><a href="{{ url_for('add_task') }}">Add a Task</a></li>
+                <li><a href="{{ url_for('get_categories') }}">Manage Categories</a></li>
+            </ul>
+        </nav>
+    </header>
     <div class="container">
-        <h1>Outside!</h1>
         {% block content %} <!-- 'content' is a variable name, you can call it what you like, 'content' is just convention -->
         {% endblock %}
     </div>
@@ -26,6 +43,9 @@
     <script>
     /*global $*/
         $(document).ready(function() {
+            /* Navbar */
+            $(".button-collapse").sideNav();
+            
             /* Accordion Functionality */
             $('.collapsible').collapsible();
             
