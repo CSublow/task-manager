@@ -54,6 +54,41 @@ def update_task(task_id): # We pass in the task_id as that is the hook into the 
         'is_urgent': request.form.get['is_urgent']
     })
     return redirect(url_for('get_tasks'))
+    
+@app.route('/delete_task/<task_id>')
+def delete_task(task_id):
+    # Use ObjectId to parse the task_id in a format acceptable to mongo
+    mongo.db.tasks.remove({'_id': ObjectId(task_id)})
+    # Then go to the get_tasks function
+    return redirect(url_for('get_tasks'))
+    
+@app.route('/get_categories')
+# This function's job is to do a find on the categories table
+def get_categories():
+    return render_template('categories.html', 
+    categories = mongo.db.categories.find())
+    
+@app.route('/delete_category/<category_id>')
+def delete_category(category_id):
+    mongo.db.categories.remove({'_id': ObjectId(category_id)})
+    return redirect(url_for('get_categories'))
+    
+# edit_category takes the user to the edit category page
+@app.route('/edit_category/<category_id>')
+def edit_category(category_id):
+    return render_template('editcategory.html',
+    category = mongo.db.categories.find_one({'_id': ObjectId(category_id)}))
+    
+# The submit button on editcategory.html calls this function
+@app.route('/update_category/<category_id>', methods=['POST'])
+def update_category(category_id):
+    # categories = mongo.db.categories # Access the categories collection
+    mongo.db.categories.update( {'_id': ObjectId(category_id)},
+    {
+        # Drill into the form that is contained within the request object and get the form item whose name is category_name
+        'category_name': request.form.get['category_name'],
+    })
+    return redirect(url_for('get_categories'))
 
 if __name__ == '__main__':
     app.run(host=os.environ.get('IP'),
