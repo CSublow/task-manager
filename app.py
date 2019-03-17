@@ -33,7 +33,7 @@ def insert_task():
 @app.route('/edit_task/<task_id>')
 # This function essential gets the task that matches this task id
 def edit_task(task_id):
-    # So we want to find on particular task from the task collection
+    # So we want to find one particular task from the task collection
     # We're looking for a match for the ID
     # We wrap task_id with ObjectId in order to make it a format acceptable to mongodb
     the_task = mongo.db.tasks.find_one({"_id": ObjectId(task_id)})
